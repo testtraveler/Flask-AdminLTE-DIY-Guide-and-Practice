@@ -1,0 +1,58 @@
+{% macro pager(pagination, per_page_opts=[5, 10, 20, 50]) %}
+{% if pagination and pagination.pages > 1 %}
+
+  {% set args = request.args.copy() %}
+  {% do args.pop('page', None) %}  {# 删除旧的 page 参数 #}
+
+  {% set base_qs = (args | urlencode) %}
+  {% if base_qs %}
+    {% set base_qs = '?' ~ base_qs ~ '&' %}
+  {% else %}
+    {% set base_qs = '?' %}
+  {% endif %}
+
+  <div class="custom-pagination d-flex align-items-center justify-content-center">
+
+    <!-- 每页行数 -->
+    <label class="mr-2 mb-0">每页行数</label>
+    <select class="form-control form-control-sm per-page-select mr-3"
+            onchange="location.href='{{ url_for(request.endpoint) }}{{ base_qs }}page=1&per_page=' + this.value">
+      {% for n in per_page_opts %}
+        <option value="{{ n }}" {% if n == pagination.per_page %}selected{% endif %}>{{ n }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- 当前页/总页数 -->
+    <label class="mr-2 mb-0">当前页数</label>
+    <div class="d-flex align-items-center mr-3">
+      <input type="number" class="form-control form-control-sm page-input text-center"
+             min="1" max="{{ pagination.pages }}"
+             value="{{ pagination.page }}"
+             onchange="location.href='{{ url_for(request.endpoint) }}{{ base_qs }}page=' + this.value + '&per_page={{ pagination.per_page }}'">
+      <span class="ml-1">/ {{ pagination.pages }}</span>
+    </div>
+
+    <!-- 上一页 -->
+    <button class="btn btn-sm btn-outline-secondary mr-1"
+            {% if not pagination.has_prev %}disabled{% endif %}
+            onclick="location.href='{{ url_for(request.endpoint) }}{{ base_qs }}page={{ pagination.prev_num if pagination.has_prev else 1 }}&per_page={{ pagination.per_page }}'">
+      上一页
+    </button>
+
+    <!-- 下一页 -->
+    <button class="btn btn-sm btn-outline-secondary mr-1"
+            {% if not pagination.has_next %}disabled{% endif %}
+            onclick="location.href='{{ url_for(request.endpoint) }}{{ base_qs }}page={{ pagination.next_num if pagination.has_next else pagination.pages }}&per_page={{ pagination.per_page }}'">
+      下一页
+    </button>
+
+    <!-- 跳到尾页 -->
+    <button class="btn btn-sm btn-outline-secondary"
+            onclick="location.href='{{ url_for(request.endpoint) }}{{ base_qs }}page={{ pagination.pages }}&per_page={{ pagination.per_page }}'">
+      跳到尾页
+    </button>
+
+  </div>
+
+{% endif %}
+{% endmacro %}
