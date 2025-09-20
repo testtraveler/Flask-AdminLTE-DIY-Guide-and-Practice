@@ -10,12 +10,24 @@
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/fontawesome-free/css/all.min.css') }}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/jqvmap/jqvmap.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/adminlte.min.css') }}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/daterangepicker/daterangepicker.css') }}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/summernote/summernote-bs4.min.css') }}">
 
   <style>
     .app-panel {
@@ -61,7 +73,7 @@
     <section class="content">
       <div class="container-fluid">
     
-        <!-- 统计信息 -->
+        <!-- 合同统计信息 -->
         <div class="row">
           <!-- 合同总数统计 -->
           <div class="col-md-3 col-sm-6 col-12">
@@ -70,17 +82,10 @@
                 <div class="info-box-content">
                     <span class="info-box-text">合同总数</span>
                     <span class="info-box-number">100</span>
-                    <!-- <div class="progress">
-                    {% set new_percent = (new_tickets_count / total_tickets * 100) if total_tickets > 0 else 0 %}
-                    <div class="progress-bar" style="width: {{ "%.1f"|format(new_percent) }}%"></div>
-                    </div>
-                    <span class="progress-description">
-                    {{ "%.1f"|format(new_percent) }}% 合同总数
-                    </span> -->
                 </div>
             </div>
           </div>
-
+        
           <!-- 合同有效统计 -->
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box bg-success">
@@ -88,13 +93,6 @@
                 <div class="info-box-content">
                     <span class="info-box-text">合同有效</span>
                     <span class="info-box-number">45</span>
-                    <!-- <div class="progress">
-                    {% set completed_percent = (completed_tickets_count / total_tickets * 100) if total_tickets > 0 else 0 %}
-                    <div class="progress-bar" style="width: {{ "%.1f"|format(completed_percent) }}%"></div>
-                    </div>
-                    <span class="progress-description">
-                    {{ "%.1f"|format(completed_percent) }}% 总工单
-                    </span> -->
                 </div>
             </div>
           </div>
@@ -106,13 +104,6 @@
                 <div class="info-box-content">
                     <span class="info-box-text">合同临期</span>
                     <span class="info-box-number">27</span>
-                    <!-- <div class="progress">
-                    {% set processing_percent = (processing_tickets_count / total_tickets * 100) if total_tickets > 0 else 0 %}
-                    <div class="progress-bar" style="width: {{ "%.1f"|format(processing_percent) }}%"></div>
-                    </div>
-                    <span class="progress-description">
-                    {{ "%.1f"|format(processing_percent) }}% 总工单
-                    </span> -->
                 </div>
             </div>
           </div>
@@ -124,13 +115,6 @@
                 <div class="info-box-content">
                     <span class="info-box-text">合同到期</span>
                     <span class="info-box-number">13</span>
-                    <!-- <div class="progress">
-                    {% set abnormal_percent = (abnormal_tickets_count / total_tickets * 100) if total_tickets > 0 else 0 %}
-                    <div class="progress-bar" style="width: {{ "%.1f"|format(abnormal_percent) }}%"></div>
-                    </div>
-                    <span class="progress-description">
-                    {{ "%.1f"|format(abnormal_percent) }}% 总工单
-                    </span> -->
                 </div>
             </div>
           </div>
@@ -142,33 +126,66 @@
                 <div class="info-box-content">
                     <span class="info-box-text">合同失效</span>
                     <span class="info-box-number">15</span>
-                    <!-- <div class="progress">
-                    {% set abnormal_percent = (abnormal_tickets_count / total_tickets * 100) if total_tickets > 0 else 0 %}
-                    <div class="progress-bar" style="width: {{ "%.1f"|format(abnormal_percent) }}%"></div>
-                    </div>
-                    <span class="progress-description">
-                    {{ "%.1f"|format(abnormal_percent) }}% 总工单
-                    </span> -->
                 </div>
             </div>
           </div>
 
         </div>
 
-        <!-- 其它信息 -->
+        <!-- 工单统计信息 -->
         <div class="row">
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">其它信息</h3>
-              </div>
-              <div class="card-body">
-                <p>欢迎使用代维管理系统，您可以在这里管理您的工单和设备信息。</p>
-                <p>如有任何问题，请联系系统管理员。</p>
-              </div>
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="far fa-exclamation-triangle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">待分派</span>
+                    <span class="info-box-number">5</span>
+                </div>
             </div>
           </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="far fa-exclamation-triangle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">挂起</span>
+                    <span class="info-box-number">3</span>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="far fa-exclamation-triangle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">处理中</span>
+                    <span class="info-box-number">15</span>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="far fa-exclamation-triangle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">异常</span>
+                    <span class="info-box-number">2</span>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="far fa-exclamation-triangle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">待处理请求</span>
+                    <span class="info-box-number">5</span>
+                </div>
+            </div>
+          </div>
+
         </div>
+
       </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->
@@ -180,17 +197,39 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
-  <!-- REQUIRED SCRIPTS -->
   <!-- jQuery -->
   <script src="{{ url_for('static', filename='assets/plugins/jquery/jquery.min.js') }}"></script>
-  <!-- Bootstrap -->
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{{ url_for('static', filename='assets/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+  <!-- Bootstrap 4 -->
   <script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <!-- ChartJS -->
+  <script src="{{ url_for('static', filename='assets/plugins/chart.js/Chart.min.js') }}"></script>
+  <!-- Sparkline -->
+  <script src="{{ url_for('static', filename='assets/plugins/sparklines/sparkline.js') }}"></script>
+  <!-- JQVMap -->
+  <script src="{{ url_for('static', filename='assets/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+  <!-- jQuery Knob Chart -->
+  <script src="{{ url_for('static', filename='assets/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+  <!-- daterangepicker -->
+  <script src="{{ url_for('static', filename='assets/plugins/moment/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
+  <!-- Tempusdominus Bootstrap 4 -->
+  <script src="{{ url_for('static', filename='assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+  <!-- Summernote -->
+  <script src="{{ url_for('static', filename='assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
   <!-- overlayScrollbars -->
   <script src="{{ url_for('static', filename='assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
   <!-- AdminLTE App -->
   <script src="{{ url_for('static', filename='assets/js/adminlte.js') }}"></script>
-
-  <!-- OPTIONAL SCRIPTS -->
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="{{ url_for('static', filename='assets/js/pages/dashboard.js') }}"></script>
+  <!-- AdminLTE for demo purposes -->
   <script src="{{ url_for('static', filename='assets/js/demo.js') }}"></script>
 
 {% endblock javascripts %}

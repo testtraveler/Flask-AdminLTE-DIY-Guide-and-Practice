@@ -140,6 +140,8 @@ def route_template(template):
         return render_template('home/page-404.html'), 404
 
     except:
+        import logging
+        logging.error("route_template 500 错误: %s", exc_info=True)
         return render_template('home/page-500.html'), 500
 
 

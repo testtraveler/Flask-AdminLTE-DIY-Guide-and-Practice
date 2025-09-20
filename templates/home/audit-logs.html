@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} 合同管理 {% endblock %} 
+{% block title %} 审计日志 {% endblock %} 
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %} 
@@ -18,21 +18,6 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/adminlte.min.css') }}">
 
-  <style>
-    .badge-status {
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-    }
-    .badge-new { background-color: #17a2b8; color: white; }
-    .badge-processing { background-color: #ffc107; color: black; }
-    .badge-completed { background-color: #28a745; color: white; }
-    .badge-abnormal { background-color: #dc3545; color: white; }
-    .search-box {
-      max-width: 300px;
-    }
-  </style>
-
 {% endblock stylesheets %}
 
 {% block content %} 
@@ -44,12 +29,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>合同管理</h1>
+            <h1>审计日志</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">首页</a></li>
-              <li class="breadcrumb-item active">合同管理</li>
+              <li class="breadcrumb-item active">审计日志</li>
             </ol>
           </div>
         </div>
@@ -59,39 +44,13 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <!-- 状态统计块 -->
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-body d-flex justify-content-start flex-wrap">
 
-                <div class="status-box bg-info mr-3 mb-2 " >
-                  有效 <strong>45</strong>
-                </div>
-
-                <div class="status-box bg-warning mr-3 mb-2 " >
-                  临期 <strong>27</strong>
-                </div>
-
-                <div class="status-box bg-danger mr-3 mb-2 " >
-                  到期 <strong>13</strong>
-                </div>
-
-                <div class="status-box bg-success mr-3 mb-2 " >
-                  失效 <strong>13</strong>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 合同表格 -->
+        <!-- 工单表格 -->
         <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">合同列表</h3>
+                <h3 class="card-title">审计日志列表</h3>
 
                 <!-- 搜索 -->
                 <div class="card-tools">
@@ -101,14 +60,13 @@
                 
                 <!-- 筛选 -->
                 <div class="card-tools">
-                  <i class="fas fa-plus"></i> 筛选
-                </div>
+                  <i class="fas fa-plus"></i> 导出
+                </div> 
 
-                <!-- 新增合同 -->
+                <!-- 清空 -->
                 <div class="card-tools">
-                    <i class="fas fa-plus"></i> 新增合同
-                  </a>
-                </div>  
+                    <i class="fas fa-plus"></i> 清空日志
+                </div> 
 
               </div>
               <!-- /.card-header -->
@@ -116,40 +74,31 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>合同编号</th>
-                      <th>主体</th>
-                      <th>客户管理员</th>
-                      <th>签订时间</th>
-                      <th>到期时间</th>
-                      <th>状态</th>
+                        <th>账号ID</th>
+                        <th>用户名</th>
+                        <th>操作类型</th>
+                        <th>操作内容</th>
+                        <th>时间</th>
+                        <th>操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>1</td>
-                      <td>主体</td>
-                      <td>custome_admin</td>
-                      <td>2000-1-1</td>
-                      <td>2020-1-1</td>
-                      <td>
-                        <span class="badge badge-status badge-processing">有效</span>
-                      </td>
-
-                      <!-- 行内操作按钮 -->
-                      <td>
-                        <button class="btn btn-info btn-sm view-btn">
-                          <i class="fas fa-eye"></i> 合同详情
-                        </button>
-                        <button class="btn btn-primary btn-sm edit-btn">
-                          <i class="fas fa-edit"></i> 编辑
-                        </button>
-                        <button class="btn btn-primary btn-sm edit-btn">
-                            <i class="fas fa-edit"></i> 删除
-                        </button>
-                        <button class="btn btn-primary btn-sm edit-btn">
-                            <i class="fas fa-edit"></i> 导出
-                        </button>
-                      </td>
+                        <!-- 示例数据，后续替换为动态数据 -->
+                        <td>1</td>
+                        <td>admin</td>
+                        <td>登录</td>
+                        <td>成功登录系统</td>
+                        <td>2024-06-01 09:00</td>
+                        <!-- 行内操作按钮 -->
+                        <td>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 详情
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-btn">
+                                <i class="fas fa-trash"></i> 导出
+                            </button>
+                        </td>
                     </tr>
 
                   </tbody>

@@ -4,89 +4,85 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from flask_dance.consumer.storage.sqla import OAuthConsumerMixin
+from sqlalchemy import ForeignKey, String, Text, LargeBinary, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
 
-from apps import db, login_manager
+from apps.models import BaseModel
+from apps import db
 from apps.authentication.util import hash_pass
 
-class Users(db.Model, UserMixin):
 
+class Role(BaseModel, db.Model):
+    """角色模型"""
+    __tablename__ = 'roles'
+    
+    name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, comment="角色名")
+    description: Mapped[str] = mapped_column(Text, nullable=True, comment="描述")
+    
+    # 与用户的关系
+    users: Mapped[list["User"]] = relationship("User", back_populates="role")
+    
+    def __repr__(self):
+        return f'<Role {self.name}>'
+
+
+class Group(BaseModel, db.Model):
+    """用户组模型"""
+    __tablename__ = 'groups'
+    
+    name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, comment="组名")
+    description: Mapped[str] = mapped_column(Text, nullable=True, comment="描述")
+    
+    # 与用户的关系
+    users: Mapped[list["User"]] = relationship("User", back_populates="group")
+    
+    def __repr__(self):
+        return f'<Group {self.name}>'
+
+
+class User(BaseModel, UserMixin, db.Model):
+    """用户模型"""
     __tablename__ = 'users'
 
-    id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), unique=True)
-    email         = db.Column(db.String(64), unique=True)
-    password      = db.Column(db.LargeBinary)
-    bio           = db.Column(db.Text(), nullable=True)
+    username: Mapped[str] = mapped_column(String(64), unique=True, comment="用户名")
+    email: Mapped[str] = mapped_column(String(64), unique=True, comment="邮箱")
+    password: Mapped[bytes] = mapped_column(LargeBinary, comment="密码")
+    phone: Mapped[str] = mapped_column(String(20), nullable=True, comment="手机号")
+    bio: Mapped[str] = mapped_column(Text(), nullable=True, comment="个人简介")
+    
+    # 新增字段
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), nullable=True, comment="角色ID")
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"), nullable=True, comment="用户组ID")
+    last_login_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True, comment="上次登录时间")
+    
+    # OAuth字段
+    oauth_github: Mapped[str] = mapped_column(String(100), nullable=True, comment="GitHub OAuth ID")
+    oauth_google: Mapped[str] = mapped_column(String(100), nullable=True, comment="Google OAuth ID")
 
-    oauth_github  = db.Column(db.String(100), nullable=True)
-    oauth_google  = db.Column(db.String(100), nullable=True)
-
-    readonly_fields = ["id", "username", "email", "oauth_github", "oauth_google"]
+    # 关系
+    role: Mapped["Role"] = relationship("Role", back_populates="users")
+    group: Mapped["Group"] = relationship("Group", back_populates="users")
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
-            # depending on whether value is an iterable or not, we must
-            # unpack it's value (when **kwargs is request.form, some values
-            # will be a 1-element list)
             if hasattr(value, '__iter__') and not isinstance(value, str):
-                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
 
             if property == 'password':
-                value = hash_pass(value)  # we need bytes here (not plain str)
+                # 增加类型检查，确保密码是字符串
+                if not isinstance(value, str):
+                    raise TypeError("密码必须是字符串类型")
+                value = hash_pass(value)  # 哈希密码
 
             setattr(self, property, value)
 
     def __repr__(self):
         return str(self.username)
 
-    @classmethod
-    def find_by_email(cls, email: str) -> "Users":
-        return cls.query.filter_by(email=email).first()
-
-    @classmethod
-    def find_by_username(cls, username: str) -> "Users":
-        return cls.query.filter_by(username=username).first()
+class OAuth(OAuthConsumerMixin, BaseModel, db.Model):
+    __tablename__ = 'oauth'
     
-    @classmethod
-    def find_by_id(cls, _id: int) -> "Users":
-        return cls.query.filter_by(id=_id).first()
-   
-    def save(self) -> None:
-        try:
-            db.session.add(self)
-            db.session.commit()
-          
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            db.session.close()
-            error = str(e.__dict__['orig'])
-            raise IntegrityError(error, 422)
-    
-    def delete_from_db(self) -> None:
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            db.session.close()
-            error = str(e.__dict__['orig'])
-            raise IntegrityError(error, 422)
-        return
-
-@login_manager.user_loader
-def user_loader(id):
-    return Users.query.filter_by(id=id).first()
-
-@login_manager.request_loader
-def request_loader(request):
-    username = request.form.get('username')
-    user = Users.query.filter_by(username=username).first()
-    return user if user else None
-
-class OAuth(OAuthConsumerMixin, db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"), nullable=False)
-    user = db.relationship(Users)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="cascade"), nullable=False)
+    user: Mapped["User"] = relationship(User)

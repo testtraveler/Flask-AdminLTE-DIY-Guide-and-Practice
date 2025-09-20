@@ -12,7 +12,8 @@ from flask_dance.contrib.google import google, make_google_blueprint
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
 from sqlalchemy.orm.exc import NoResultFound
 from apps.config import Config
-from .models import Users, db, OAuth
+from apps import db
+from apps.authentication.models import User, OAuth
 from flask import redirect, url_for
 from flask import flash
 
@@ -33,27 +34,21 @@ def github_logged_in(blueprint, token):
     info = github.get("/user")
 
     if info.ok:
-
         account_info = info.json()
-        username     = account_info["login"]
+        username = account_info["login"]
 
-        query = Users.query.filter_by(oauth_github=username)
+        # 添加软删除过滤
+        query = User.query.filter_by(oauth_github=username, deleted_at=None)
         try:
-
             user = query.one()
             login_user(user)
-
         except NoResultFound:
-
-            # Save to db
-            user              = Users()
-            user.username     = '(gh)' + username
+            # 创建新用户
+            user = User()
+            user.username = '(gh)' + username
             user.oauth_github = username
-
-            # Save current user
             db.session.add(user)
             db.session.commit()
-
             login_user(user)
 
 # Google
@@ -80,24 +75,20 @@ def google_logged_in(blueprint, token):
 
     if info.ok:
         account_info = info.json()
-        username     = account_info["given_name"]
-        email        = account_info["email"]
+        username = account_info["given_name"]
+        email = account_info["email"]
 
-        query = Users.query.filter_by(oauth_google=username)
+        # 添加软删除过滤
+        query = User.query.filter_by(oauth_google=username, deleted_at=None)
         try:
-
             user = query.one()
             login_user(user)
-
         except NoResultFound:
-            # Save to db
-            user              = Users()
-            user.username     = '(google)' + username
+            # 创建新用户
+            user = User()
+            user.username = '(google)' + username
             user.oauth_google = username
-            user.email        = email
-
-            # Save current user
+            user.email = email
             db.session.add(user)
             db.session.commit()
-
             login_user(user)

@@ -16,7 +16,7 @@ from flask_dance.contrib.google import google
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from apps.authentication.services import UserService
 from apps.config import Config
 from apps.authentication.util import verify_pass
 
@@ -51,30 +51,22 @@ def login_google():
 def login():
     login_form = LoginForm(request.form)
     if 'login' in request.form:
-
-        # read form data
         username = request.form['username']
         password = request.form['password']
 
-        # Locate user
-        user = Users.query.filter_by(username=username).first()
+        user = UserService.find_by_username(username)
 
-        # Check the password
         if user and verify_pass(password, user.password):
-
             login_user(user)
             return redirect(url_for('authentication_blueprint.route_default'))
 
-        # Something (user or pass) is not ok
         return render_template('accounts/login.html',
                                msg='Wrong user or password',
                                form=login_form)
-
     if not current_user.is_authenticated:
-        return render_template('accounts/login.html',
+        return render_template('accounts/login.html', 
                                form=login_form)
     return redirect(url_for('home_blueprint.index'))
-
 
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
@@ -85,7 +77,7 @@ def register():
         email = request.form['email']
 
         # Check usename exists
-        user = Users.query.filter_by(username=username).first()
+        user = UserService.find_by_username(username)
         if user:
             return render_template('accounts/register.html',
                                    msg='Username already registered',
@@ -93,7 +85,7 @@ def register():
                                    form=create_account_form)
 
         # Check email exists
-        user = Users.query.filter_by(email=email).first()
+        user = UserService.find_by_email(email)
         if user:
             return render_template('accounts/register.html',
                                    msg='Email already registered',
@@ -101,7 +93,7 @@ def register():
                                    form=create_account_form)
 
         # else we can create the user
-        user = Users(**request.form)
+        user = UserService
         db.session.add(user)
         db.session.commit()
 

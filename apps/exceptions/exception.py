@@ -18,3 +18,4 @@ class InvalidUsage(Exception):
         rv['message'] = self.message
 
         return rv
+    

@@ -1,0 +1,541 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} 工单管理 {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/fontawesome-free/css/all.min.css') }}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/adminlte.min.css') }}">
+
+{% endblock stylesheets %}
+
+{% block content %} 
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>工单管理</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">首页</a></li>
+              <li class="breadcrumb-item active">工单管理</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <!-- 工单表格 -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">工单列表</h3>
+
+                <!-- 搜索 -->
+                <div class="card-tools">
+                  {% from 'macros/search_macros.html' import search_box %}
+                  <i class="fas fa-plus"></i> 搜索
+                </div>
+                
+                <!-- 筛选 -->
+                <div class="card-tools">
+                  <i class="fas fa-plus"></i> 筛选
+                </div> 
+
+                <!-- 派单 -->
+                <div class="card-tools">
+                    <i class="fas fa-plus"></i> 派单
+                </div> 
+
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                        <th>工单编号</th>
+                        <th>主体</th>
+                        <th>类型</th>   
+                        <th>工单标题</th>
+                        <th>客户名称</th>
+                        <th>指派工程师</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>状态</th>
+                        <!-- 操作列 -->
+                        <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <!-- 示例数据，后续替换为动态数据 -->
+                        <td>工单编号</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>客户名称</td>
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+                        
+                        <!-- 行内操作按钮 -->
+                        
+                        <td>
+                            <button class="btn btn-info btn-sm view-btn">
+                            <i class="fas fa-eye"></i> 查看详情
+                            </button>
+                            <button class="btn btn-info btn-sm view-btn">
+                                <i class="fas fa-eye"></i> 标记状态
+                                </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 删除
+                            </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 归档
+                            </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 取消
+                            </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 重新分派
+                            </button>
+                            <button class="btn btn-primary btn-sm edit-btn">
+                                <i class="fas fa-edit"></i> 导出
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>角色编码</td>
+                        <td>名称</td>
+                        <td>权限描述</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>工单编号</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>客户名称</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>主体</td>
+                        <td>类型</td>
+                        <td>工单标题</td>
+                        <td>admin</td>  
+                        <td>engineer</td>
+                        <td>2020-1-1</td>
+                        <td>2020-1-1</td>
+                        <td>
+                          <span class="badge badge-status badge-new">新建</span>
+                        </td>
+
+                      <!-- 行内操作按钮 -->
+                      <td>
+                        <button class="btn btn-info btn-sm view-btn">
+                          <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                          <i class="fas fa-edit"></i> 标记状态
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 删除
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 归档
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 取消
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 重新分派
+                        </button>
+                        <button class="btn btn-primary btn-sm edit-btn">
+                            <i class="fas fa-edit"></i> 导出
+                        </button>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                {% from 'macros/pagination_macros.html' import pager %}
+                {{ pager(pagination) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="{{ url_for('static', filename='assets/plugins/jquery/jquery.min.js') }}"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <!-- DataTables -->
+  <script src="{{ url_for('static', filename='assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <!-- AdminLTE App -->
+  <script src="{{ url_for('static', filename='assets/js/adminlte.min.js') }}"></script>
+
+{% endblock javascripts %}

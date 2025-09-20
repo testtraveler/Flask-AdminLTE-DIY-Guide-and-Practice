@@ -9,6 +9,7 @@ from   flask_minify  import Minify
 from   sys import exit
 
 from apps.config import config_dict
+from apps.utils.initializer import init_app
 from apps import create_app, db
 
 # WARNING: Don't run with debug turned on in production!
@@ -32,9 +33,12 @@ with app.app_context():
     
     try:
         db.create_all()
+        init_app()
     except Exception as e:
 
         print('> Error: DBMS Exception: ' + str(e) )
+        import traceback
+        traceback.print_exc()
 
         # fallback to SQLite
         basedir = os.path.abspath(os.path.dirname(__file__))
