@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
     "postcss": "^8.5.3",
