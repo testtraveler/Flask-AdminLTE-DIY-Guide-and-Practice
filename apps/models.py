@@ -4,7 +4,6 @@
 """
 
 from datetime import datetime, timezone
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import DateTime, func
 
@@ -38,46 +37,6 @@ class BaseModel():
         comment="软删除时间"
     )  # 软删除时间
     
-    # 公共方法
-    def save(self) -> None:
-        """保存对象到数据库"""
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            error = str(e.orig)
-            raise IntegrityError(error, 422)
-    
-    def delete(self) -> None:
-        """软删除：设置删除时间而不是真正删除记录"""
-        try:
-            self.deleted_at = datetime.now(timezone.utc)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            error = str(e.orig)
-            raise IntegrityError(error, 422)
-        
-    def restore(self) -> None:
-        """恢复软删除记录"""
-        try:
-            self.deleted_at = None
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            error = str(e.orig)
-            raise IntegrityError(error, 422)
-    
-    def hard_delete(self) -> None:
-        """硬删除：从数据库彻底删除记录"""
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            error = str(e.orig)
-            raise IntegrityError(error, 422)
     
     @classmethod
     def query_active(cls):
