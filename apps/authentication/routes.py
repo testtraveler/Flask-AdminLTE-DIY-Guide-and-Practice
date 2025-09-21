@@ -18,7 +18,7 @@ from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
 from apps.authentication.services import UserService
 from apps.config import Config
-from apps.authentication.util import verify_pass
+from apps.authentication.utils import verify_pass
 
 
 @blueprint.route('/')
@@ -53,10 +53,9 @@ def login():
     if 'login' in request.form:
         username = request.form['username']
         password = request.form['password']
-
         user = UserService.find_by_username(username)
-
-        if user and verify_pass(password, user.password):
+        
+        if UserService.verify_password(user.id, password):
             login_user(user)
             return redirect(url_for('authentication_blueprint.route_default'))
 

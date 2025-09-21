@@ -8,7 +8,6 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
-from apps.utils.logger import init_logger
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -37,7 +36,11 @@ def create_app(config):
     print(' > STATIC_FOLDER:    ' + STATIC_FOLDER)
 
     app = Flask(__name__, static_url_path=static_prefix, template_folder=TEMPLATES_FOLDER, static_folder=STATIC_FOLDER)
-
+    
+    # 注册全局变量
+    import apps.globals
+    apps.globals.logger = app.logger
+    
     app.config.from_object(config)
 
     # 启用 Jinja2 的 do 扩展
@@ -48,6 +51,6 @@ def create_app(config):
     app.register_blueprint(github_blueprint, url_prefix="/login")    
     app.register_blueprint(google_blueprint, url_prefix="/login")   
     
-    init_logger(app)
+
     
     return app

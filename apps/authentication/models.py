@@ -11,7 +11,7 @@ from datetime import datetime
 
 from apps.models import BaseModel
 from apps import db
-from apps.authentication.util import hash_pass
+from apps.authentication.utils import hash_pass
 
 
 class Role(BaseModel, db.Model):
@@ -64,19 +64,6 @@ class User(BaseModel, UserMixin, db.Model):
     # 关系
     role: Mapped["Role"] = relationship("Role", back_populates="users")
     group: Mapped["Group"] = relationship("Group", back_populates="users")
-
-    def __init__(self, **kwargs):
-        for property, value in kwargs.items():
-            if hasattr(value, '__iter__') and not isinstance(value, str):
-                value = value[0]
-
-            if property == 'password':
-                # 增加类型检查，确保密码是字符串
-                if not isinstance(value, str):
-                    raise TypeError("密码必须是字符串类型")
-                value = hash_pass(value)  # 哈希密码
-
-            setattr(self, property, value)
 
     def __repr__(self):
         return str(self.username)

@@ -3,6 +3,13 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+# import warnings, traceback, sys
+# warnings.filterwarnings('always', category=UserWarning, module='pydantic.*')
+# warnings.showwarning = lambda msg, cat, filename, lineno, file=None, line=None: (
+#     print(f'\n🚨 {cat.__name__}: {msg}', file=sys.stderr),
+#     traceback.print_stack()
+# )
+
 import os
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
