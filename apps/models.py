@@ -36,17 +36,3 @@ class BaseModel():
         nullable=True,
         comment="软删除时间"
     )  # 软删除时间
-    
-    
-    @classmethod
-    def query_active(cls):
-        """返回未删除的记录查询"""
-        return db.session.query(cls).filter(cls.deleted_at.is_(None))
-    
-    @classmethod
-    def query_all(cls, include_deleted=False):
-        """返回所有记录的查询，可选择是否包含已删除的记录"""
-        query = db.session.query(cls)
-        if not include_deleted:
-            query = query.filter(cls.deleted_at.is_(None))
-        return query

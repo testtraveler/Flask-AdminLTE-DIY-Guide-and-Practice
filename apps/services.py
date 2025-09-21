@@ -80,6 +80,21 @@ class BaseService:
             db.session.rollback()
             logger.exception("删除 %s 失败 - 系统错误", cls.model_class.__name__)
             raise RuntimeError(f"删除 {cls.model_class.__name__} 失败: 系统错误") from e
+        
+    @classmethod
+    def _query_active(cls):
+        """返回未删除的记录查询"""
+        cls._check_model()
+        return db.session.query(cls.model_class).filter(cls.model_class.deleted_at.is_(None))
+
+    @classmethod
+    def _query_all(cls, include_deleted: bool = False):
+        """返回所有记录的查询，可选择是否包含已删除的记录"""
+        cls._check_model()
+        query = db.session.query(cls.model_class)
+        if not include_deleted:
+            query = query.filter(cls.model_class.deleted_at.is_(None))
+        return query
     # endregion
 
     # region 查询
@@ -87,7 +102,7 @@ class BaseService:
     def get_all(cls, include_deleted: bool = False) -> List[BaseModel]:
         cls._check_model()
         try:
-            return cls.model_class.query_all(include_deleted).all()
+            return cls._query_all(include_deleted).all()
         except SQLAlchemyError as e:
             logger.exception("获取 %s 全部记录失败 - 数据库错误", cls.model_class.__name__)
             raise SQLAlchemyError(f"获取全部记录失败：数据库错误") from e
@@ -99,7 +114,7 @@ class BaseService:
     def get_by_id(cls, id: int, include_deleted: bool = False) -> Optional[BaseModel]:
         cls._check_model()
         try:
-            result = cls.model_class.query_all(include_deleted).filter_by(id=id).one_or_none()
+            result = cls._query_all(include_deleted).filter(cls.model_class.id == id).one_or_none()
             if result is None and not include_deleted:
                 raise NoResultFound(f"{cls.model_class.__name__} ID={id} 不存在")
             return result
@@ -117,7 +132,7 @@ class BaseService:
     def get_by_ids(cls, ids: List[int], include_deleted: bool = False) -> List[BaseModel]:
         cls._check_model()
         try:
-            query = cls.model_class.query_all(include_deleted)
+            query = cls._query_all(include_deleted)
             return query.filter(cls.model_class.id.in_(ids)).all()
         except SQLAlchemyError as e:
             logger.exception("按 IDs=%s 查询 %s 失败 - 数据库错误", ids, cls.model_class.__name__)
@@ -130,7 +145,7 @@ class BaseService:
     def find_by_filter(cls, include_deleted: bool = False, **kwargs: Any) -> List[BaseModel]:
         cls._check_model()
         try:
-            query = cls.model_class.query_all(include_deleted)
+            query = cls._query_all(include_deleted)
             for field, value in kwargs.items():
                 if not hasattr(cls.model_class, field):
                     raise AttributeError(f"{cls.model_class.__name__} 没有字段 {field}")
@@ -150,7 +165,7 @@ class BaseService:
     def search(cls, search_term: str, fields: List[str], include_deleted: bool = False) -> List[BaseModel]:
         cls._check_model()
         try:
-            query = cls.model_class.query_all(include_deleted)
+            query = cls._query_all(include_deleted)
             conditions = []
             for field in fields:
                 if hasattr(cls.model_class, field):
